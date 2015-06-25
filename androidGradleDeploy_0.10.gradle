@@ -72,32 +72,32 @@ afterEvaluate { project ->
     }
 
     android.libraryVariants.all { variant ->
-        def name = variant.name
-        task "javadoc$name"(type: Javadoc) {
-            description = "Generates javadoc for build $name"
-            destinationDir = new File(destinationDir, variant.baseName)
-            source = files(variant.javaCompile.source)
-            classpath = files(android.bootClasspath, variant.javaCompile.classpath)
-            options.encoding = "UTF-8"
-            exclude '**/R.html', '**/R.*.html'
-        }
-    }
+      def name = variant.name
+      task "javadoc$name"(type: Javadoc) {
+         description = "Generates javadoc for build $name"
+         destinationDir = new File(destinationDir, variant.baseName)
+         source = files(variant.javaCompile.source)
+         classpath = files(android.bootClasspath, variant.javaCompile.classpath)
+         options.encoding = "UTF-8"
+         exclude '**/R.java', '**/R.html', '**/R.*.html'
+      }
+   }
 
-    signing {
-        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-        sign configurations.archives
-    }
+   signing {
+      required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+      sign configurations.archives
+   }
 
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.allSource
-    }
+   task androidSourcesJar(type: Jar) {
+      classifier = 'sources'
+      //from android.sourceSets.main.allSource
+   }
 
-    task androidJavadocsJar(type: Jar, dependsOn: javadocrelease) {
-        classifier = 'javadoc'
-        exclude '**/R.html', '**/R.*.html'
-        from javadocrelease.destinationDir
-    }
+   task androidJavadocsJar(type: Jar, dependsOn: javadocrelease) {
+      classifier = 'javadoc'
+      exclude '**/R.java', '**/R.html', '**/R.*.html'
+      from javadocrelease.destinationDir
+   }
 
 
     artifacts {
