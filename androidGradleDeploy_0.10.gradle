@@ -38,6 +38,7 @@ afterEvaluate { project ->
                 }
                 snapshotRepository(url: getSnapshotRepositoryUrl()) {
                     authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                    uniqueVersion = false
                 }
 
                 pom.project {
